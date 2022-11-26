@@ -1,0 +1,1 @@
+SELECT  * from HR_persons_T
