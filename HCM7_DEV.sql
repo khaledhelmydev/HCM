@@ -1,1 +1,0 @@
-SELECT   * from HR_persons_T   ORDER by person_id 

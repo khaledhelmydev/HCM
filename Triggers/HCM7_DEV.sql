@@ -1,0 +1,1 @@
+SELECT   * from HR_persons_T  where 1 = 1  ORDER by person_id 
