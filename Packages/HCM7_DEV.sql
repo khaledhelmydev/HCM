@@ -1,1 +1,1 @@
-SELECT   * from HR_persons_T  where 1 = 1  ORDER by person_id 
+--> update SS_GENRAL_API.SS_PROFILE_NAME_TAB_T_DML 
