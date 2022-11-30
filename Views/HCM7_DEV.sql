@@ -1,1 +1,2 @@
-SELECT   * from HR_persons_T  where 1 = 1  ORDER by person_id 
+--> update AMS_ABSENCE_MGT_HEADER_V
+--> update AMS_ABSENCE_MGT_REASONS_V
