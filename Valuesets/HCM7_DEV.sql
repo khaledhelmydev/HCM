@@ -200,3 +200,10 @@ Insert into GN_LIST_OF_VALUES_T
     'GN_LOOKUP_VALUES_VS', NULL, 17, TO_DATE('11/24/2022 6:56:22 PM', 'MM/DD/YYYY HH:MI:SS AM'), 17, 
     TO_DATE('11/24/2022 6:58:57 PM', 'MM/DD/YYYY HH:MI:SS AM'), NULL, 'Y', 'M', 'S');
 COMMIT;
+
+    ************************************ M.ibrahem ***************************************
+UPDATE GN_LIST_OF_VALUES_T
+SET LOV_QUERY = 'ENABLE_FLAG=''Y'''
+WHERE LOV_NAME='AMS_ABSENCE_REASON_VS';
+COMMIT;
+
