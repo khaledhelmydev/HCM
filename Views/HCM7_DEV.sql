@@ -1,3 +1,27 @@
 --> update AMS_ABSENCE_MGT_HEADER_V
 --> update AMS_ABSENCE_MGT_REASONS_V
 --> update TAT_BASE_LINE_PLAN_INFO_V
+--> CREATE OR REPLACE FORCE VIEW "HCM7_DEV"."GN_SESSIONS_V" ("SESSION_ID", "EFFECTIVE_DATE", "USER_ID", "USER_NAME", "EMPLOYEE_NUMBER", "EMPLOYEE_NAME", "SITE_NAME", "SESSION_EXPIRED", "URL_DOMAIN", "LAST_UPDATED_DATE",SESSION_IP) AS 
+--   SELECT SESSION_ID,
+--           EFFECTIVE_DATE,
+--           GS.USER_ID,
+--           USER_NAME,
+--           GU.EMPLOYEE_NUMBER,
+--           GN_REPORTS_PKG.GET_PERSON_NAME (GU.PERSON_ID, TRUNC (SYSDATE))
+--              EMPLOYEE_NAME,
+--           HS.SITE_NAME,
+--           GS.SESSION_EXPIRED,
+--           S.URL_DOMAIN,
+--           GS.LAST_UPDATED_DATE,
+--           SESSION_IP
+--      FROM GN_SESSIONS_T GS,
+--           GN_USERS_T    GU,
+--           HR_SITES_TL   HS,
+--           HR_SITES_T    S
+--     WHERE     GS.USER_ID = GU.USER_ID
+--           AND GS.SITE_ID = GU.SITE_ID
+--           AND GS.SITE_ID = HS.SITE_ID
+--           AND GS.SITE_ID = S.SITE_ID
+--           AND GU.SITE_ID = S.SITE_ID
+--           AND HS.SITE_ID = S.SITE_Id
+--           AND HS.LANGUAGE = 'US';
