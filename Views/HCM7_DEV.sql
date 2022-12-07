@@ -74,5 +74,60 @@ AS
      FROM GN_FUSION_INTEGRATION_T;
 
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+DROP VIEW HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V;
+
+/* Formatted on 12/7/2022 3:29:22 PM (QP5 v5.294) */
+CREATE OR REPLACE FORCE VIEW HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V
+(
+   RCD_ID,
+   CODE,
+   WIDGET_DESC,
+   PRIV_ID,
+   TYPE,
+   TYPE_DESC,
+   RIV_NAME,
+   ENTITY_ID,
+   EFFECTIVE_START_DATE
+)
+AS
+   SELECT RCD_ID,
+          CODE,
+          HR_GENERAL_PKG.DECODE_LOOKUP ('GN_DASHBOARD_WIDGET',
+                                        CODE,
+                                        GN_GLOBAL_PKG.USER_LANG)
+             WIDGET_DESC,
+          PRIV_ID,
+          GW.TYPE,
+          HR_GENERAL_PKG.DECODE_LOOKUP ('GN_DASHBOARD_RULE_TYPE',
+                                        GW.TYPE,
+                                        GN_GLOBAL_PKG.USER_LANG)
+             TYPE_DESC,
+          CASE GW.TYPE
+             WHEN 'U'
+             THEN
+                (SELECT nvl(GN_GLOBAL_PKG.GET_FULLNAME (GT.PERSON_ID),gt.USER_NAME)
+                   FROM GN_USERS_T GT
+                  WHERE GT.USER_ID = GW.PRIV_ID)
+             WHEN 'R'
+             THEN
+                (SELECT GP.GRP_NAME
+                   FROM GN_PRIV_GROUPS_T GP
+                  WHERE GP.GRP_ID = GW.PRIV_ID)
+          END
+             RIV_NAME,
+          GW.ENTITY_ID,
+          EFFECTIVE_START_DATE
+     FROM GN_DASHBOARD_WIDGETS_PRIV_T GW
+    WHERE TRUNC (SYSDATE) BETWEEN GW.EFFECTIVE_START_DATE
+                              AND GW.EFFECTIVE_END_DATE;
+
+
+CREATE OR REPLACE SYNONYM HCM7_DEV_TRN.GN_DASHBOARD_WIDGETS_PRIV_V FOR HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V;
+
+
+GRANT SELECT ON HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V TO HCM7_DEV_TRN;
+
 
 

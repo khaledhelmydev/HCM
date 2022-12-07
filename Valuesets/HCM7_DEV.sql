@@ -246,3 +246,10 @@ AND T.TYPE_CODE NOT IN (''BG'',''BU'',''LE'',''HCM_PSU'', ''HCM_LEMP'', ''FUN_BU
     TO_DATE('11/28/2022 6:03:24 PM', 'MM/DD/YYYY HH:MI:SS AM'), NULL, 'Y', 'M', 'S');
 COMMIT;
 
+    ************************************ M.ibrahem ***************************************
+
+UPDATE GN_LIST_OF_VALUES_T
+SET LOV_COL2 = 'nvl(GN_GLOBAL_PKG.GET_FULLNAME (PERSON_ID),USER_NAME)'
+WHERE LOV_NAME='USERS_VS';
+COMMIT;
+
