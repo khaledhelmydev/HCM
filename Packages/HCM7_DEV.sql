@@ -70,3 +70,5 @@ END;
         AND SYSDATE BETWEEN UT.EFFECTIVE_START_DATE
                                  AND UT.EFFECTIVE_END_DATE)
 ->>>>>>>>>>>>>>>
+
+--> update GN_GENERAL_API.GN_MAIN_MENUS_T_DML
