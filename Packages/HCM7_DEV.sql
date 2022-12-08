@@ -72,3 +72,4 @@ END;
 ->>>>>>>>>>>>>>>
 
 --> update GN_GENERAL_API.GN_MAIN_MENUS_T_DML
+--> update HR_GENERAL_API.HR_BANK_DETAILS_T_DML
