@@ -71,4 +71,16 @@ END;
                                  AND UT.EFFECTIVE_END_DATE)
 ->>>>>>>>>>>>>>>
 
---> update GN_GENERAL_API.GN_MAIN_MENUS_T_DML
+remove to_date function from below part
+ GN_SESSION_PKG.SET_SESSION_VARIABLE  
+
+IF P_NAME = 'EFFECTIVE_DATE'
+      THEN
+         UPDATE GN_SESSIONS_T
+            SET EFFECTIVE_DATE = 
+--            TO_DATE (
+            P_VALUE
+--            , 'dd-MM-yyyy')
+          WHERE SESSION_ID = G_SESSION_ID;
+
+->>>>>>>>>>>>>>>>
