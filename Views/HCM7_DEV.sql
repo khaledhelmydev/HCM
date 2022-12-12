@@ -130,7 +130,7 @@ CREATE OR REPLACE SYNONYM HCM7_DEV_TRN.GN_DASHBOARD_WIDGETS_PRIV_V FOR HCM7_DEV.
 GRANT SELECT ON HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V TO HCM7_DEV_TRN;
 
 
->>>>>>>>>>>>>>>>>>>>> create this view
+ >>>>>>>>>>>>>>>>>>>>> create this view
 
 CREATE OR REPLACE FORCE VIEW HR_FILTERED_ORGANIZATIONS_V
 (
@@ -170,7 +170,68 @@ AS
                          org.entity_id) = 'on'
            ORDER BY organization_name ASC);
 
->>>>>>>>>>
+ 
+
+ *************************** Saber *****************
+ 
+CREATE OR REPLACE FORCE VIEW HCM7_QA.GN_COSTING_FLEX_FIELDS_V
+(
+   FLEX_STRUCTURE_NAME,
+   FLEX_STRUCTURE_DESC,
+   FLEX_LINE_ID,
+   SEGMENT_NAME,
+   COLUMN_NAME,
+   LEFT_PROMPT,
+   ENABLED_FLAG,
+   DISPLAY_FLAG,
+   FLEX_VALUE_SET,
+   ENTITY_ID,
+   LOV_COL1,
+   LOV_COL2,
+   LOV_TABLE,
+   LOV_QUERY,
+   SEGMENT_NUM,
+   ELEMENT_ENTRY_Q,
+   ELEMENT_LINKS_Q,
+   LOCATION_Q,
+   ORGANIZATION_Q,
+   PAYROLL_Q,
+   BALANCING_Q,
+   ASSIGNMENT_Q
+)
+AS
+     SELECT FLEX_STRUCTURE_NAME,
+            FLEX_STRUCTURE_DESC,
+            FLEX_LINE_ID,
+            SEGMENT_NAME,
+            COLUMN_NAME,
+            LEFT_PROMPT,
+            ENABLED_FLAG,
+            DISPLAY_FLAG,
+            FLEX_VALUE_SET,
+            B.ENTITY_ID,
+            lov.LOV_COL1,
+            lov.LOV_COL2,
+            lov.LOV_TABLE,
+            lov.LOV_QUERY,
+            SEGMENT_NUM,
+            ELEMENT_ENTRY_Q,
+            ELEMENT_LINKS_Q,
+            LOCATION_Q,
+            ORGANIZATION_Q,
+            PAYROLL_Q,
+            BALANCING_Q,
+            ASSIGNMENT_Q
+       FROM GN_FLEX_SEGMENTS_T A,
+            GN_FLEX_STRUCTURES_T B,
+            GN_LIST_OF_VALUES_T LOV
+      WHERE     A.FLEX_VALUE_SET = LOV.LOV_NAME(+)
+            AND A.FLEX_HEADER_ID = B.FLEX_HEADER_ID
+            --   AND   B.ENTITY_ID=:pEntityId
+            AND ENABLED_FLAG = 'Y'
+            AND DISPLAY_FLAG = 'Y'
+            AND B.FLEX_STRUCTURE_TYPE = 'COSTING'
+   ORDER BY SEGMENT_NUM ASC;
 
 
-
+ 
