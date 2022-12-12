@@ -130,4 +130,47 @@ CREATE OR REPLACE SYNONYM HCM7_DEV_TRN.GN_DASHBOARD_WIDGETS_PRIV_V FOR HCM7_DEV.
 GRANT SELECT ON HCM7_DEV.GN_DASHBOARD_WIDGETS_PRIV_V TO HCM7_DEV_TRN;
 
 
+>>>>>>>>>>>>>>>>>>>>> create this view
+
+CREATE OR REPLACE FORCE VIEW HR_FILTERED_ORGANIZATIONS_V
+(
+   ORGANIZATION_ID,
+   ORGANIZATION_NAME,
+   ENTITY_ID,
+   HR_ORGANIZATION_TREE,
+   MASTER_ORG
+)
+AS
+   SELECT organization_id,
+          organization_name,
+          entity_id,
+          hr_organization_tree,
+          master_org
+     FROM (SELECT organization_id,
+                  organization_name,
+                  org.entity_id,
+                  NULL  master_org,
+                  'off' hr_organization_tree
+             FROM hr_organizations_v org
+            WHERE     type_code NOT IN ('BG', 'LE', 'BU')
+                  AND gn_global_pkg.get_global_variable (
+                         'HR_ORGANIZATION_TREE',
+                         org.entity_id) = 'off'
+           UNION
+           SELECT organization_id,
+                  organization_name,
+                  org.entity_id,
+                  tree.organization_parent_id master_org,
+                  'on'                        hr_organization_tree
+             FROM hr_organizations_v org, hr_org_tree_details_t tree
+            WHERE     org.organization_id = tree.organization_child_id
+                  AND type_code NOT IN ('BG', 'LE', 'BU')
+                  AND gn_global_pkg.get_global_variable (
+                         'HR_ORGANIZATION_TREE',
+                         org.entity_id) = 'on'
+           ORDER BY organization_name ASC);
+
+>>>>>>>>>>
+
+
 
