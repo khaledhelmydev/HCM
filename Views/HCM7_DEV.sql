@@ -236,6 +236,7 @@ AS
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+/* Formatted on 12/14/2022 11:48:22 AM (QP5 v5.294) */
 CREATE OR REPLACE FORCE VIEW HR_ORGANIZATIONS_V
 (
    ORGANIZATION_ID,
@@ -284,7 +285,8 @@ CREATE OR REPLACE FORCE VIEW HR_ORGANIZATIONS_V
    LEGISLATION_CON_SEGMENTS,
    PARENT_ID,
    PARENT_NAME,
-   COST_ALLOCATION_KEYFLEX_ID
+   COST_ALLOCATION_KEYFLEX_ID,
+   CONCATENATED_SEGMENTS
 )
 AS
    SELECT L.ORGANIZATION_ID,
@@ -363,7 +365,8 @@ AS
                 P_ORGANIZATION_ID   => L.PARENT_ID),
              '')
              PARENT_NAME,
-             L.COST_ALLOCATION_KEYFLEX_ID
+             L.COST_ALLOCATION_KEYFLEX_ID,
+             L.CONCATENATED_SEGMENTS
      FROM HR_ORGANIZATIONS_T             L,
           HR_ORGANIZATIONS_TL            LTL,
           HR_LOCATIONS_V                 LV1,
@@ -394,6 +397,7 @@ AS
                                                                 NVL (
                                                                    GN_GLOBAL_PKG.USER_DATE,
                                                                    SYSDATE));
+
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
