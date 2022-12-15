@@ -84,3 +84,8 @@ IF P_NAME = 'EFFECTIVE_DATE'
           WHERE SESSION_ID = G_SESSION_ID;
 
 ->>>>>>>>>>>>>>>>
+
+
+update 
+HR_WORK_STRUCTURE_API.HR_ORGANIZATIONS_T_DML add CONCATENATED_SEGMENTS Field in insert query 
+->>>>>>>>>>>>>>>>
