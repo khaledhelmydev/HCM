@@ -378,3 +378,6 @@ COMMIT;
     'PAY_ELEMENT_TYPES_V', NULL, 17, TO_DATE('7/28/2022 12:23:31 PM', 'MM/DD/YYYY HH:MI:SS AM'), -1, 
     TO_DATE('12/19/2022 12:14:38 PM', 'MM/DD/YYYY HH:MI:SS AM'), NULL, 'Y', 'M', 'S');
 COMMIT;
+   ************************************ M.ibrahem ***************************************
+UPDATE GN_LIST_OF_VALUES_T SET NO_OF_COL =3 , LOV_COL3='ENTITY_ID' WHERE LOV_NAME='PROJECT_DEFINITION_SEC_VS'
+COMMIT;
