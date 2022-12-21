@@ -431,3 +431,7 @@ ORDER BY 1 asc', 3,
 COMMIT;end;
 
 >>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+UPDATE GN_LIST_OF_VALUES_T SET LOV_QUERY=' ACTIVE = ''1'' AND FORMULA_TYPE=''Absence Validation''  ' WHERE LOV_NAME='FORMULAS_ABS_VS'
+COMMIT;
