@@ -92,5 +92,31 @@ HR_WORK_STRUCTURE_API.HR_ORGANIZATIONS_T_DML add CONCATENATED_SEGMENTS Field in 
 
 --> update SS_GENRAL_API.SS_PROFILE_NAME_TAB_T_DML 
 
+--->>>>>>>>>>>>>>>>>>>>>>>>>>.update 
+
+HR_GENERAL_API.HR_PEOPLE_GROUPS_T_DML >>  LINE  8942
+replace cursor CR query with new one below
+
+      SELECT ROWNUM NUM, AB.COLUMN_NAME
+           FROM (  SELECT COLUMN_NAME
+                     FROM GN_FLEX_SEGMENTS_T GFS, GN_FLEX_STRUCTURES_T GFT
+                    WHERE     GFS.FLEX_HEADER_ID = GFT.FLEX_HEADER_ID
+                          AND GFT.ENTITY_ID = P_ENTITY_ID
+                          AND FLEX_STRUCTURE_TYPE = 'PEOPLE_GROUP'  AND GFS.ASSIGNMENT_Q ='Y'
+                 ORDER BY SEGMENT_NUM) AB;
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+
+---- create PCM_GENERAL_API.PCM_ENTITTY_STEPS_T_DML
+
+
+>>>>>>>>>>>>>>>>>>>>>>> hazem
+
+TAT_GENERAL_API.TAT_SCHEDULES_DEFINTION_T_DML >>>> update line 832 
+
+    DATE_TO = DATE_TO, replaced by     DATE_TO = P_DATE_TO
+
+>>>>>>>>>>>>>>>>>>
+
 
 
