@@ -467,6 +467,62 @@ AS
      FROM PCM_PAYROLL_PROCESSES_T PCM_PP;
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+CREATE OR REPLACE FORCE VIEW HR_SITES_V
+(
+   SITE_ID,
+   COUNTRY_CODE,
+   EFFECTIVE_START_DATE,
+   EFFECTIVE_END_DATE,
+   SITE_LOGO,
+   CREATED_BY,
+   CREATION_DATE,
+   LAST_UPDATED_BY,
+   LAST_UPDATE_DATE,
+   CURRENCY_CODE,
+   SITE_NAME,
+   COUNTRY,
+   CURRENCY,
+   URL_DOMAIN,
+   FUSION_USERNAME,
+   FUSION_PASSWORD,
+   FUSION_ENDPOINT,
+   SITE_TYPE,
+   SYSADMIN_USER_ID,
+   SITE_LOGO_NAME,
+   REPORT_LOGO
+)
+AS
+   SELECT s."SITE_ID",
+          s."COUNTRY_CODE",
+          s."EFFECTIVE_START_DATE",
+          s."EFFECTIVE_END_DATE",
+          s."SITE_LOGO",
+          s."CREATED_BY",
+          s."CREATION_DATE",
+          s."LAST_UPDATED_BY",
+          s."LAST_UPDATE_DATE",
+          s."CURRENCY_CODE",
+          st.site_name,
+          GLV.MEANING  country,
+          GLV1.MEANING CURRENCY,
+          s.URL_DOMAIN,
+          s.FUSION_USERNAME,
+          s.FUSION_PASSWORD,
+          s.FUSION_ENDPOINT,
+          s.SITE_TYPE,
+          s.SYSADMIN_USER_ID,
+          s.SITE_LOGO_NAME,
+          s.REPORT_LOGO
+     FROM hr_sites_t         s,
+          hr_sites_tl        st,
+          gn_lookup_values_v glv,
+          gn_lookup_values_v glv1
+    WHERE     S.SITE_ID = ST.SITE_ID
+          AND st.language = GN_GLOBAL_PKG.user_lang
+          AND GLV.LOOKUP_CODE = S.COUNTRY_CODE
+          AND glv.LOOKUP_TYPE = 'HR_COUNTRIES'
+          AND GLV1.LOOKUP_CODE = S.CURRENCY_CODE
+          AND glv1.LOOKUP_TYPE = 'HR_CURRENCIES';
 
 
  
