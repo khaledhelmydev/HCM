@@ -109,3 +109,14 @@ replace cursor CR query with new one below
 
 ---- create PCM_GENERAL_API.PCM_ENTITTY_STEPS_T_DML
 
+
+>>>>>>>>>>>>>>>>>>>>>>> hazem
+
+TAT_GENERAL_API.TAT_SCHEDULES_DEFINTION_T_DML >>>> update line 832 
+
+    DATE_TO = DATE_TO, replaced by     DATE_TO = P_DATE_TO
+
+>>>>>>>>>>>>>>>>>>
+
+
+
