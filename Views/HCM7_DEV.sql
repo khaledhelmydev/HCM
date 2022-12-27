@@ -525,4 +525,60 @@ AS
           AND glv1.LOOKUP_TYPE = 'HR_CURRENCIES';
 
 
+>>>>>>>>>>>>>>>>>>> 
+already done in QA
+
+CREATE OR REPLACE FORCE VIEW TAT_BASE_LINE_PLAN_INFO_V
+(
+   PLAN_ID,
+   PLAN_NAME,
+   START_DATE,
+   END_DATE,
+   ACTIVE_FLAG,
+   CREATION_DATE,
+   LAST_UPDATE_DATE,
+   CREATED_BY,
+   LAST_UPDATED_BY,
+   ENTITY_ID,
+   ENTITY_NAME,
+   CATEGORY_TYPE,
+   CATEGORY_TYPE_NAME,
+   CATEGORY_ID,
+   CATEGORY_ID_NAME
+)
+AS
+   SELECT "PLAN_ID",
+          NVL (GN_TRANSLATION_PKG.DECODE_TAT_PLAN_NAME_TL (TT.PLAN_ID),
+               TT.PLAN_NAME)
+             "PLAN_NAME",
+          "START_DATE",
+          "END_DATE",
+          "ACTIVE_FLAG",
+          "CREATION_DATE",
+          "LAST_UPDATE_DATE",
+          "CREATED_BY",
+          "LAST_UPDATED_BY",
+          "ENTITY_ID",
+          HR_GENERAL_PKG.DECODE_ENTITY (ENTITY_ID) ENTITY_NAME,
+          "CATEGORY_TYPE",
+          --          (SELECT MEANING
+          --             FROM GN_LOOKUP_VALUES_V GV
+          --            WHERE     GV.LOOKUP_TYPE = 'TAT_ATTENDANCE_GROUP_TYPES'
+          --                  AND GV.LOOKUP_CODE = TT.CATEGORY_TYPE)
+          (SELECT REPLACE (CATEGORY_TYPE, '_', ' ')
+             FROM TAT_PERSONS_PER_CATEGORY_V
+            WHERE CATEGORY_TYPE = TT.CATEGORY_TYPE AND ROWNUM < 2)
+             CATEGIRY_NAME,
+          "CATEGORY_ID",
+          (SELECT CATEGORY_ID_DESC
+             FROM TAT_PERSONS_PER_CATEGORY_V TV
+            WHERE     TV.CATEGORY_TYPE = TT.CATEGORY_TYPE
+                  AND TV.CATEGORY_ID = TT.CATEGORY_ID
+                  AND ROWNUM < 2)
+             CATEGORY_ID_NAME
+     FROM TAT_BASE_LINE_PLAN_INFO_T TT
+    WHERE ACTIVE_FLAG = 'Y'
+
+>>>>>>>>>>>>>>>>>>>>>>>
+
  
