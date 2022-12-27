@@ -483,3 +483,12 @@ Insert into GN_LIST_OF_VALUES_T
     TO_DATE('12/21/2022 8:39:48 PM', 'MM/DD/YYYY HH:MI:SS AM'), NULL, 'Y', 'M', 'S');
 COMMIT;
 
+>>>>>>>>>>>>>>>>>>> already done in QA
+
+update  value set lov Query  with name GN_JET_FUNCTIONS_FILTERED_VS
+
+to be below
+FUNCTION_ID NOT IN (SELECT DISTINCT FUNCTION_ID FROM GN_MAIN_MENU_FUNCTIONS_T) and type='JET'
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
