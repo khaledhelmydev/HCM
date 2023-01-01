@@ -525,4 +525,170 @@ AS
           AND glv1.LOOKUP_TYPE = 'HR_CURRENCIES';
 
 
- 
+>>>>>>>>>>>>>>>>>>> 
+already done in QA
+
+CREATE OR REPLACE FORCE VIEW TAT_BASE_LINE_PLAN_INFO_V
+(
+   PLAN_ID,
+   PLAN_NAME,
+   START_DATE,
+   END_DATE,
+   ACTIVE_FLAG,
+   CREATION_DATE,
+   LAST_UPDATE_DATE,
+   CREATED_BY,
+   LAST_UPDATED_BY,
+   ENTITY_ID,
+   ENTITY_NAME,
+   CATEGORY_TYPE,
+   CATEGORY_TYPE_NAME,
+   CATEGORY_ID,
+   CATEGORY_ID_NAME
+)
+AS
+   SELECT "PLAN_ID",
+          NVL (GN_TRANSLATION_PKG.DECODE_TAT_PLAN_NAME_TL (TT.PLAN_ID),
+               TT.PLAN_NAME)
+             "PLAN_NAME",
+          "START_DATE",
+          "END_DATE",
+          "ACTIVE_FLAG",
+          "CREATION_DATE",
+          "LAST_UPDATE_DATE",
+          "CREATED_BY",
+          "LAST_UPDATED_BY",
+          "ENTITY_ID",
+          HR_GENERAL_PKG.DECODE_ENTITY (ENTITY_ID) ENTITY_NAME,
+          "CATEGORY_TYPE",
+          --          (SELECT MEANING
+          --             FROM GN_LOOKUP_VALUES_V GV
+          --            WHERE     GV.LOOKUP_TYPE = 'TAT_ATTENDANCE_GROUP_TYPES'
+          --                  AND GV.LOOKUP_CODE = TT.CATEGORY_TYPE)
+          (SELECT REPLACE (CATEGORY_TYPE, '_', ' ')
+             FROM TAT_PERSONS_PER_CATEGORY_V
+            WHERE CATEGORY_TYPE = TT.CATEGORY_TYPE AND ROWNUM < 2)
+             CATEGIRY_NAME,
+          "CATEGORY_ID",
+          (SELECT CATEGORY_ID_DESC
+             FROM TAT_PERSONS_PER_CATEGORY_V TV
+            WHERE     TV.CATEGORY_TYPE = TT.CATEGORY_TYPE
+                  AND TV.CATEGORY_ID = TT.CATEGORY_ID
+                  AND ROWNUM < 2)
+             CATEGORY_ID_NAME
+     FROM TAT_BASE_LINE_PLAN_INFO_T TT
+    WHERE ACTIVE_FLAG = 'Y'
+
+>>>>>>>>>>>>>>>>>>>>>>>
+/* Formatted on 12/29/2022 1:27:23 PM (QP5 v5.391) */
+CREATE OR REPLACE FORCE VIEW HCM7_DEV.PCM_ACTIONS_V
+(
+    STEP_ID,
+    STEP_NAME,
+    STP_SEQUENCE,
+    STP_ACTIVE,
+    ACTION_ID,
+    ENTITY_ID,
+    ACTION_CODE,
+    ACTION_NAME,
+    ACTIVE,
+    SEQUENCE,
+    CONCURRENT_PROGRAM_ID,
+    REPORT_PATH,
+    REPORT_FILE_NAME,
+    REPORT_FORMAT,
+    VISIBLE_ACTIONS_IDS,
+    APPROVERS,
+    PROCESS_ID,
+    REPORT_LOGO,
+    PAYROLL_ID,
+    FTP_SERVER_ID,
+    ACTION,
+    ACTION_TYPE,
+    SHORT_NAME
+)
+AS
+      SELECT STP.STEP_ID,
+             STP.STEP_NAME,
+             STP.SEQUENCE     STP_SEQUENCE,
+             STP.ACTIVE STP_ACTIVE,
+             ACT.ACTION_ID,
+             ACT.ENTITY_ID,
+             ACT.ACTION_CODE,
+             ACTL.ACTION_NAME,
+             ACT.ACTIVE,
+             ACT.SEQUENCE,
+             ACT.CONCURRENT_PROGRAM_ID,
+             CONC.REPORT_PATH,
+             CONC.REPORT_FILE_NAME,
+             CONC.REPORT_FORMAT,
+             ACT.VISIBLE_ACTIONS_IDS,
+             ACT.APPROVERS,
+             PPP.PROCESS_ID,
+             CONC.REPORT_LOGO,
+             ACT.PAYROLL_ID,
+             ACT.FTP_SERVER_ID,
+             ACT.ACTION,
+             ACT.ACTION_TYPE,
+             CONC.SHORT_NAME
+        FROM PCM_STEPS_T              STP,
+             PCM_ACTIONS_T            ACT,
+             PCM_PAYROLL_PROCESSES_T  PPP,
+             PCM_ACTIONS_T            VIS_ACT,
+             GN_CONCURRENT_PROGRAMS_TL CONC,
+             PCM_ACTIONS_TL           ACTL
+       WHERE     STP.STEP_ID = ACT.STEP_ID
+             AND STP.ENTITY_ID = ACT.ENTITY_ID
+             AND ACT.ACTION_ID = ACTL.ACTION_ID
+             AND ACTL.LANGUAGE = GN_GLOBAL_PKG.USER_LANG
+             AND STP.ACTIVE = 1
+             AND ACT.ACTIVE = 1
+             AND ACT.CONCURRENT_PROGRAM_ID = CONC.CONCURRENT_PROGRAM_ID(+)
+             AND PPP.LAST_ACTION_ID = VIS_ACT.ACTION_ID(+)
+             AND (   (ACT.STEP_ID IN (1, 7))
+                  OR (PPP.LAST_ACTION_ID IS NULL AND ACT.ACTION_CODE IN (2, 10))
+                  OR (    PCM_GENERAL_API.GET_PCM_PROCESS_STEP_STATUS (
+                              PPP.PROCESS_ID,
+                              ACT.STEP_ID) =
+                          'S'
+                      AND ACT.ACTION_CODE IN (20,
+                                              24,
+                                              25,
+                                              26)
+                      AND PCM_GENERAL_API.GET_PCM_PROCESS_STEP_STATUS (
+                              PPP.PROCESS_ID,
+                              ACT.STEP_ID + 1) =
+                          'C')
+                  OR (    PCM_GENERAL_API.GET_PCM_PROCESS_STEP_STATUS (
+                              PPP.PROCESS_ID,
+                              ACT.STEP_ID) <>
+                          'S'
+                      AND ',' || VIS_ACT.VISIBLE_ACTIONS_IDS || ',' LIKE
+                              '%,' || ACT.ACTION_CODE || ',%'))
+             AND (   PPP.CONCURRENT_REQUEST_ID IS NULL
+                  OR (    PPP.CONCURRENT_REQUEST_ID IS NOT NULL
+                      AND NVL (ACT.HIDE_DURING_CONC, 0) = 0))
+    ORDER BY STP.SEQUENCE, ACT.SEQUENCE;
+
+    >>>>>>>>>>>>>>>>>
+
+    /* Formatted on 12/29/2022 2:21:47 PM (QP5 v5.391) */
+CREATE OR REPLACE FORCE VIEW HCM7_DEV.PCM_STEPS_V
+(
+    STEP_ID,
+    STEP_NAME,
+    SEQUENCE,
+    ACTIVE,
+    ENTITY_ID
+)
+AS
+      SELECT ST.STEP_ID,
+             TL.STEP_NAME,
+             ST.SEQUENCE,
+             ST.ACTIVE,
+             ST.ENTITY_ID
+        FROM PCM_STEPS_T ST, PCM_STEPS_TL TL
+       WHERE     ACTIVE = 1
+             AND ST.STEP_ID = TL.STEP_ID
+             AND TL.LANGUAGE = GN_GLOBAL_PKG.USER_LANG
+    ORDER BY sequence;
