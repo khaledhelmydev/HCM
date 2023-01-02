@@ -380,6 +380,8 @@ Insert into PCM_DEFAULT_STEPS_T
  
 COMMIT;
 end; 
-
  
+Hint >>>>>>>>>>>>>>>>>>>>>>>>>> ADD NEW COLUMN >>> ENTITY_ID <<<  IN PCM_STEPS_TL 
+
+  
 
