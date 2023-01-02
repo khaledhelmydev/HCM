@@ -692,3 +692,26 @@ AS
              AND ST.STEP_ID = TL.STEP_ID
              AND TL.LANGUAGE = GN_GLOBAL_PKG.USER_LANG
     ORDER BY sequence;
+
+
+/* Formatted on 1/2/2023 12:49:52 PM (QP5 v5.294) */
+CREATE OR REPLACE FORCE VIEW HCM7_DEV.PCM_STEPS_V
+(
+   STEP_ID,
+   STEP_NAME,
+   SEQUENCE,
+   ACTIVE,
+   ENTITY_ID
+)
+AS
+     SELECT ST.STEP_ID,
+            TL.STEP_NAME,
+            ST.SEQUENCE,
+            ST.ACTIVE,
+            ST.ENTITY_ID
+       FROM PCM_STEPS_T ST, PCM_STEPS_TL TL
+      WHERE     ACTIVE = 1
+            AND ST.STEP_ID = TL.STEP_ID AND  ST.ENTITY_ID = TL.ENTITY_ID 
+            AND TL.LANGUAGE = GN_GLOBAL_PKG.USER_LANG
+   ORDER BY sequence;
+ 
