@@ -240,3 +240,40 @@ BEGIN
              AND LANGUAGE = GN_GLOBAL_PKG.USER_LANG;
    END IF;
 END;
+
+************ Saber ***************
+CREATE OR REPLACE TRIGGER HCM7_DEV.PCM_STEPS_T_LANG
+   AFTER INSERT OR DELETE
+   ON HCM7_DEV.PCM_STEPS_T
+   REFERENCING NEW AS NEW OLD AS OLD
+   FOR EACH ROW
+DECLARE
+   CURSOR C_LANG
+   IS
+      SELECT LOOKUP_CODE
+        FROM GN_LOOKUP_VALUES_T
+       WHERE LOOKUP_TYPE = 'SYSTEM_LANGUAGES';
+BEGIN
+   IF INSERTING
+   THEN
+      FOR REC IN C_LANG
+      LOOP
+         INSERT INTO PCM_STEPS_TL
+              VALUES (:NEW.STEP_ID,
+                      :NEW.STEP_NAME,
+                       REC.LOOKUP_CODE,
+                      :NEW.CREATED_BY,
+                      :NEW.CREATION_DATE,
+                      :NEW.LAST_UPDATED_BY,
+                      :NEW.LAST_UPDATE_DATE         
+                      );
+      END LOOP;
+   END IF;
+
+   IF DELETING
+   THEN
+      DELETE PCM_STEPS_TL
+       WHERE STEP_ID = :OLD.STEP_ID;
+   END IF;
+END;
+/
