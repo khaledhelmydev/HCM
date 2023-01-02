@@ -206,4 +206,90 @@ BEGIN
  DBMS_OUTPUT.PUT_LINE(L_MESSAGE);
  END TRANSFER_STEPS_ENTITIES;
 
+ **********************
+>>In  PCM_GENERAL_API
+ PROCEDURE TRANSFER_STEPS_BY_ENTITY(P_ENTITY_ID VARCHAR2)
+ IS
+   V_DUPLICATE_FLAG   VARCHAR2 (1) := 'N';
+    L_MESSAGE VARCHAR2(1000);
+     STEP_NAME varchar2(500); 
+   CURSOR C_PCM_DEFAULT_ACTIONS_T (P_STEP_D VARCHAR2)
+   IS
+      SELECT *
+        FROM PCM_DEFAULT_ACTIONS_T
+       WHERE NVL (ACTIVE, 0) = 1 AND STEP_ID = P_STEP_D;
+       
+  CURSOR C_PCM_DEFAULT_STEPS_T 
+   IS
+   SELECT STEP_ID, STEP_NAME,  SEQUENCE,  ACTIVE FROM PCM_DEFAULT_STEPS_T ;
+
+   CURSOR C_CHECK_DUPLICTE (P_STEP_ID VARCHAR2)
+   IS
+      SELECT 'Y'
+        FROM PCM_STEPS_T
+       WHERE STEP_ID = P_STEP_ID AND ENTITY_ID = P_ENTITY_ID;
+    CURSOR ENTITIES_RECS
+   IS
+      SELECT ENTITY_ID FROM HR_ENTITIES_T WHERE ENTITY_ID=P_ENTITY_ID;
+    BEGIN
+       FOR REC IN ENTITIES_RECS
+       LOOP
+    FOR ITEM IN C_PCM_DEFAULT_STEPS_T
+      LOOP
+      V_DUPLICATE_FLAG:='N';
+      
+         OPEN C_CHECK_DUPLICTE (ITEM.STEP_ID);
+         FETCH C_CHECK_DUPLICTE INTO V_DUPLICATE_FLAG;
+         CLOSE C_CHECK_DUPLICTE;
+ 
+         IF V_DUPLICATE_FLAG <> 'Y'
+         THEN
+          STEP_NAME:=ITEM.STEP_NAME;
+            INSERT INTO PCM_STEPS_TL (STEP_ID,
+                                     STEP_NAME,
+                                     SEQUENCE,
+                                     ACTIVE,
+                                     ENTITY_ID)
+                 VALUES (ITEM.STEP_ID,
+                         STEP_NAME,
+                         ITEM.SEQUENCE,
+                         ITEM.ACTIVE,
+                         P_ENTITY_ID); 
+            FOR ACTION_REC IN C_PCM_DEFAULT_ACTIONS_T(ITEM.STEP_ID)
+            LOOP
+               INSERT INTO PCM_ACTIONS_T (ACTION_NAME,
+                                          ACTIVE,
+                                          STEP_ID,
+                                          SEQUENCE,
+                                          VISIBLE_ACTIONS_IDS,
+                                          CURRENT_STEP_STATUS,
+                                          ACTION,
+                                          ACTION_CODE,
+                                          CONCURRENT_PROGRAM_ID,
+                                          ENTITY_ID)
+                    VALUES (ACTION_REC.ACTION_NAME,
+                            ACTION_REC.ACTIVE,
+                            ACTION_REC.STEP_ID,
+                            ACTION_REC.SEQUENCE,
+                            ACTION_REC.VISIBLE_ACTIONS_IDS,
+                            ACTION_REC.CURRENT_STEP_STATUS,
+                            ACTION_REC.ACTION,
+                            ACTION_REC.ACTION_CODE,
+                            ACTION_REC.CONCURRENT_PROGRAM_ID,
+                            P_ENTITY_ID);
+                             COMMIT;
+            END LOOP;
+         END IF;
+      END LOOP;
+ END LOOP;
+ 
+ EXCEPTION
+   WHEN OTHERS
+   THEN
+   L_MESSAGE := (
+    SQLERRM || CHR (10) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE ()
+);
+ DBMS_OUTPUT.PUT_LINE(L_MESSAGE);
+ END TRANSFER_STEPS_BY_ENTITY;
+
 
