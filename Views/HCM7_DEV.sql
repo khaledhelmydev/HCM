@@ -714,4 +714,67 @@ AS
             AND ST.STEP_ID = TL.STEP_ID AND  ST.ENTITY_ID = TL.ENTITY_ID 
             AND TL.LANGUAGE = GN_GLOBAL_PKG.USER_LANG
    ORDER BY sequence;
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hazem functions
+
+
+CREATE OR REPLACE FORCE VIEW GN_MAIN_MENU_FUNCTIONS_V
+(
+   RCD_ID,
+   MAIN_MENU_ID,
+   FUNCTION_ID,
+   FUNCTION_NAME,
+   DISPLAY_SEQUENCE,
+   ACCESS_TYPE,
+   ACCESS_TYPE_DESC,
+   SELECTED,
+   ACTIVE,
+   ADF_FLAG,
+   MAIN_MENU_NAME,
+   TYPE,
+   SYSTEM_FLAG,
+   MAIN_MENU_ICON,
+   FUNCTION_ICON,
+   FUNCTION_ADF_FLAG
+)
+AS
+     SELECT RCD_ID,
+            MF.MAIN_MENU_ID,
+            MF.FUNCTION_ID,
+            NVL (
+               GN_TRANSLATION_PKG.DECODE_GN_FUNCTIONS_NAME_TL (MF.FUNCTION_ID),
+               (SELECT FUNCTION_NAME
+                  FROM GN_FUNCTIONS_T
+                 WHERE FUNCTION_ID = MF.FUNCTION_ID))
+               FUNCTION_NAME,
+            DISPLAY_SEQUENCE,
+            MF.ACCESS_TYPE,
+            HR_GENERAL_PKG.DECODE_LOOKUP ('GN_FUNCTIONS_ACCESS_TYPES',
+                                          MF.ACCESS_TYPE)
+               ACCESS_TYPE_DESC,
+            'N' SELECTED,
+            ACTIVE,
+            (SELECT ADF_FLAG
+               FROM GN_MAIN_MENUS_T
+              WHERE MAIN_MENU_ID = MF.MAIN_MENU_ID)
+               ADF_FLAG,
+            NVL (
+               GN_TRANSLATION_PKG.DECODE_GN_MAIN_MENU_NAME_TL (MF.MAIN_MENU_ID),
+               (SELECT MAIN_MENU_NAME
+                  FROM GN_MAIN_MENUS_T
+                 WHERE MAIN_MENU_ID = MF.MAIN_MENU_ID))
+               MAIN_MENU_NAME,
+            FT.TYPE,
+            SYSTEM_FLAG,
+            (SELECT MENU_ICON
+               FROM GN_MAIN_MENUS_T
+              WHERE MAIN_MENU_ID = MF.MAIN_MENU_ID)
+               MAIN_MENU_ICON,
+            FT.FUNCTION_ICON,
+            FT.ADF_FLAG
+       FROM GN_MAIN_MENU_FUNCTIONS_T MF, GN_FUNCTIONS_T FT
+      WHERE MF.FUNCTION_ID = FT.FUNCTION_ID
+   ORDER BY MF.MAIN_MENU_ID;
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
  

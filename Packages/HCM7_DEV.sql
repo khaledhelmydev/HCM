@@ -292,4 +292,13 @@ BEGIN
  DBMS_OUTPUT.PUT_LINE(L_MESSAGE);
  END TRANSFER_STEPS_BY_ENTITY;
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hazem functions
+
+GN_GENERAL_API.GN_FUNCTIONS_T_DML  update line 50
+
+  WHERE     FUNCTION_NAME = P_FUNCTION_NAME AND TYPE=P_TYPE  AND ADF_FLAG =P_ADF_FLAG
+
+>>>>>>>>>>>>>>>>>>>>>>>
+
+
 

@@ -383,5 +383,17 @@ end;
  
 Hint >>>>>>>>>>>>>>>>>>>>>>>>>> ADD NEW COLUMN >>> ENTITY_ID <<<  IN PCM_STEPS_TL 
 
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> hazem functions
+
+
+   update GN_FUNCTIONS_T  set ADF_FLAG='N' where ADF_FLAG IS NULL
+  
+  update GN_FUNCTIONS_T set SHORT_NAME='MANAGE_SIGNATURE'  where FUNCTION_NAME='Manage Signature' AND ADF_FLAG ='N'
+
+>>>>>>>>>>>>>>>>>>>>
+
+
+
   
 

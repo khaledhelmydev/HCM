@@ -490,5 +490,19 @@ update  value set lov Query  with name GN_JET_FUNCTIONS_FILTERED_VS
 to be below
 FUNCTION_ID NOT IN (SELECT DISTINCT FUNCTION_ID FROM GN_MAIN_MENU_FUNCTIONS_T) and type='JET'
 
->>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> hazem functions
+GN_JET_FUNCTIONS_FILTERED_VS
+
+UPDATE GN_LIST_OF_VALUES_T SET LOV_QUERY ='FUNCTION_ID NOT IN (SELECT DISTINCT FUNCTION_ID FROM GN_MAIN_MENU_FUNCTIONS_T) and (TYPE = ''JET'' OR (TYPE = ''BF'' AND ADF_FLAG = ''N''))' WHERE LOV_NAME ='GN_JET_FUNCTIONS_FILTERED_VS'
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+
+
+
+
+
+
+
+
+
 
